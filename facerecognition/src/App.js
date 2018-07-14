@@ -73,13 +73,17 @@ class App extends Component {
       .catch(err => console.log(err));
   }
 
+  onRouteChange = (route)=>{
+      this.setState({route: route});
+  }
+
   render() {
     return (
       <div className="App">
         <Particles className = 'particles' params={particlesOption}/>
-        <Navigation />
+        <Navigation onRouteChange = {this.onRouteChange}/>
         { this.state.route === 'signin'
-          ? <SignIn />
+          ? <SignIn onRouteChange = {this.onRouteChange}/>
           : <div>
               <Logo /> 
               <Rank />
@@ -89,8 +93,6 @@ class App extends Component {
               <FaceRecognition box = {this.state.box} imageUrl = {this.state.imageUrl}/>
             </div>
         }
-        
-        
       </div>
     );
   }
