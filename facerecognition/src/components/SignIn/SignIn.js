@@ -1,5 +1,6 @@
 import React from 'react';
 import './SignIn.css';
+import SimpleReactValidator from 'simple-react-validator'
 
 class SignIn extends React.Component {
 	constructor(props){
@@ -7,7 +8,8 @@ class SignIn extends React.Component {
 		this.state = {
 			signInEmail:'',
 			signInPassword: '',
-		}
+		};
+		this.validator = new SimpleReactValidator();
 	}
 	onEmailChange = (event) =>{
 		this.setState({signInEmail: event.target.value });
@@ -18,6 +20,11 @@ class SignIn extends React.Component {
 	}
 
 	onSubmitSignIn = () =>{
+		if( ! this.validator.allValid() ){
+		    this.validator.showMessages();
+		    // rerender to show messages for the first time
+		    this.forceUpdate();
+		}
 		fetch('http://localhost:3000/signin', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
@@ -51,6 +58,7 @@ class SignIn extends React.Component {
 				        	name="email-address"  
 				        	id="email-address" 
 				        	onChange = {this.onEmailChange}/>
+				        {this.validator.message('email', this.state.signInEmail, 'required|email', 'text-danger')}
 				      </div>
 				      <div className="mv3">
 				        <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
@@ -60,6 +68,7 @@ class SignIn extends React.Component {
 				        	type="password" 
 				        	name="password"  
 				        	id="password" />
+				        {this.validator.message('password', this.state.signInPassword, 'required')}
 				      </div>
 				      <label className="pa0 ma0 lh-copy f6 pointer"><input type="checkbox"/> Remember me</label>
 				    </fieldset>
