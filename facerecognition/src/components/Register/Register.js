@@ -1,4 +1,6 @@
 import React from 'react';
+import SimpleReactValidator from 'simple-react-validator'
+
 
 class Register extends React.Component {
 	constructor(props){
@@ -7,7 +9,8 @@ class Register extends React.Component {
 			email:'',
 			password: '',
 			name: '',
-		}
+		};
+		this.validator = new SimpleReactValidator();
 	}
 	onNameChange = (event) =>{
 		this.setState({name: event.target.value });
@@ -22,6 +25,11 @@ class Register extends React.Component {
 	}
 
 	onSubmitSignIn = () =>{
+		if( ! this.validator.allValid() ){
+		    this.validator.showMessages();
+		    // rerender to show messages for the first time
+		    this.forceUpdate();
+		}
 		fetch('http://localhost:3000/register', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
@@ -43,7 +51,7 @@ class Register extends React.Component {
 
 	render() {
 		return (
-			<article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l shadow-5 mw6 center">
+			<article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l shadow-5 mw6 center">
 				<main className="pa4 black-80">
 				  <div className="measure ">
 				    <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -52,19 +60,21 @@ class Register extends React.Component {
 				        <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
 				        <input 
 				        	onChange = {this.onNameChange}
-				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white " 
-				        	type="name" 
+				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+				        	type="text" 
 				        	name="name"  
 				        	id="name" />
+				        {this.validator.message('name', this.state.name, 'required')}
 				      </div>
 				      <div className="mt3">
 				        <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 				        <input 
 				        	onChange = {this.onEmailChange}
-				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 form-control" 
 				        	type="email" 
 				        	name="email-address"  
 				        	id="email-address" />
+				        {this.validator.message('email', this.state.email, 'required|email', 'text-danger')}
 				      </div>
 				      <div className="mv3">
 				        <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
@@ -74,6 +84,7 @@ class Register extends React.Component {
 				        	type="password" 
 				        	name="password"  
 				        	id="password" />
+				        {this.validator.message('password', this.state.password, 'required|min:6|max:12', false, {min: 'Must have 6 more characters',max:'Must have 12 less characters'})}
 				      </div>
 				    </fieldset>
 				    <div className="">
