@@ -24,7 +24,7 @@ const particlesOption = {
 const initialState = {
       input: '',
       imageUrl:'',
-      box: {},
+      box: [],
       route: 'signin',
       isSignedIn: false,
       user:{
@@ -59,6 +59,7 @@ class App extends Component {
 
   calculateFaceLocation = (data) => {
     // const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    
     // const image = document.getElementById('inputimage');
     // const width = Number(image.width);
     // const height = Number(image.height);
@@ -68,18 +69,23 @@ class App extends Component {
     //   rightCol: width - (clarifaiFace.right_col * width),
     //   bottomRow: height - (clarifaiFace.bottom_row * height)
     // }
-    const image = document.getElementById('inputImage')
-    const width = Number(image.width)
-    const height = Number(image.height) 
-    const newArr = data.outputs[0].data.regions.map(region => {
-      return{
-        leftCol:region.region_info.bounding_box.left_col * width,
-        topRow: region.region_info.bounding_box.top_row * height,
-        rightCol:width - (region.region_info.bounding_box.right_col * width),
-        bottomRow: height - (region.region_info.bounding_box.bottom_row * height)
-      } 
-    })
-    return newArr
+    
+    const clarifaiFace = data.outputs[0].data.regions.map( (box) => { return box.region_info.bounding_box})
+ 
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    const box = clarifaiFace.map((face) => {
+        return {
+          leftCol: face.left_col * width,
+          topRow: face.top_row * height,
+          rightCol: width - (face.right_col * width),
+          bottomRow: height - (face.bottom_row * height)
+        }
+      }
+
+    );
+    return box;
   }
 
 
@@ -143,8 +149,8 @@ class App extends Component {
               <ImageLinkForm 
                 OnInputChange = {this.OnInputChange} 
                 OnButtonSubmit = {this.OnButtonSubmit}/>
-              <FaceRecognition imageUrl={this.state.imageUrl} calcFaceLocation={this.calcFaceLocation} box={this.state.box} />
-              {/*<FaceRecognition box = {this.state.box} imageUrl = {this.state.imageUrl}/>*/}
+
+              <FaceRecognition box = {this.state.box} imageUrl = {this.state.imageUrl}/>
               
             </div>
           : ( this.state.route === 'signin'
