@@ -92,6 +92,7 @@ class App extends Component {
 
   displayFaceBox = (box)=>{
     console.log(box);
+    console.log("boxlength:" + box.length)
     this.setState({box: box});
   }
   OnInputChange = (event)=>{
@@ -119,7 +120,7 @@ class App extends Component {
           })
           .then(response => response.json())
           .then(count =>{
-            this.setState(Object.assign(this.state.user, {entries: count}))
+            this.setState(Object.assign(this.state.user, {entries: count }))
           })
           .catch(console.log);
         }
@@ -145,10 +146,13 @@ class App extends Component {
         { this.state.route === 'home'
           ? <div>
               <Logo /> 
-              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
+              <Rank name={this.state.user.name} entries={this.state.user.entries} nums = {this.state.box.length}/>
               <ImageLinkForm 
                 OnInputChange = {this.OnInputChange} 
                 OnButtonSubmit = {this.OnButtonSubmit}/>
+              <div className='white f3'>
+                { `Faces Detected: ${this.state.box.length}`}
+              </div>
 
               <FaceRecognition box = {this.state.box} imageUrl = {this.state.imageUrl}/>
               
