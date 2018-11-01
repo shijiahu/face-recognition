@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "clarifai": "^2.8.0",
+    "merge": "^1.2.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-particles-js": "^2.2.0",
@@ -12,7 +13,8 @@
     "shortid": "^2.2.12",
     "simple-react-validator": "0.0.7",
     "tachyons": "^4.10.0",
-    "tilt.js": "^1.2.1"
+    "tilt.js": "^1.2.1",
+    "url-parse": "^1.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
